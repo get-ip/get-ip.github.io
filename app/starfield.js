@@ -7,12 +7,14 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let stars = [];
-    const STAR_COUNT = 500;
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         stars = [];
+
+        const STAR_COUNT = Math.max(50, Math.min(Math.floor((canvas.width * canvas.height) / 4000), 500));
+
         for (let i = 0; i < STAR_COUNT; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
