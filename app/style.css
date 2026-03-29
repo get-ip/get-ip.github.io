@@ -584,3 +584,11 @@ canvas#starfield {
     .src-name      { font-size: 0.6rem; }
     .stxt          { font-size: 0.54rem; }
 }
+
+/* Optimization for mobile devices */
+@media (max-width: 768px) {
+  .nebula { display: none !important; filter: none !important; opacity: 0 !important; }
+  .sources-panel { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(0, 0, 0, 0.85) !important; }
+  .ip-address { filter: none !important; text-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
+  .ip-address:hover { filter: none !important; text-shadow: 0 0 15px rgba(0, 198, 255, 0.6); }
+}
