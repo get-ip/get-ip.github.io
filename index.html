@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your IP</title>
+    <link rel="preconnect" href="https://www.cloudflare.com">
+    <link rel="preconnect" href="https://icanhazip.com">
+    <link rel="preconnect" href="https://api.ipify.org">
+    <link rel="preconnect" href="https://checkip.amazonaws.com">
+    <link rel="dns-prefetch" href="https://am.i.mullvad.net">
+    <link rel="dns-prefetch" href="https://ident.me">
+    <link rel="stylesheet" href="app/style.css">
+</head>
+
+<body>
+
+    <canvas id="starfield"></canvas>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+
+    <div class="content">
+        <p class="label" id="ip-label">YOUR IP ADDRESS</p>
+        <div id="result">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script src="app/starfield.js"></script>
+    <script src="app/FastIP.js"></script>
+    <script>
+        (function () {
+            var resultEl = document.getElementById('result');
+            var labelEl = document.getElementById('ip-label');
+            var ipv4Test = /^(\d{1,3}\.){3}\d{1,3}$/;
+
+            function makeBlock(ip, label, small) {
+                var isV4 = ipv4Test.test(ip);
+                var block = document.createElement('div');
+                block.className = 'ip-block';
+
+                var ipEl = document.createElement('div');
+                ipEl.className = 'ip-address' + (small ? ' ip-dual' : '');
+                ipEl.textContent = ip;
+
+                if (!isV4) {
+                    var fs = Math.max((small ? 60 : 85) / ip.length, 1.8).toFixed(2);
+                    ipEl.style.fontSize = 'clamp(0.9rem, ' + fs + 'vw, ' + (small ? '3.5' : '4.5') + 'rem)';
+                    ipEl.style.wordBreak = 'break-all';
+                    ipEl.style.whiteSpace = 'normal';
+                }
+
+                var typeEl = document.createElement('p');
+                typeEl.className = 'ip-type';
+                typeEl.textContent = label;
+
+                ipEl.addEventListener('click', function () {
+                    function flash() {
+                        ipEl.classList.add('copied');
+                        setTimeout(function () { ipEl.classList.remove('copied'); }, 700);
+                    }
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(ip).then(flash).catch(function () { fbCopy(ip); flash(); });
+                    } else { fbCopy(ip); flash(); }
+                });
+
+                block.appendChild(ipEl);
+                block.appendChild(typeEl);
+                return block;
+            }
+
+            var ds = FastIP.getDualStack();
+            var stV4 = null, stV6 = null, v4done = false, v6done = false;
+
+            function renderState() {
+                if (!stV4 && !stV6) {
+                    if (v4done && v6done) resultEl.innerHTML = '<p class="error">—</p>';
+                    return;
+                }
+                resultEl.innerHTML = '';
+                if (stV4 && stV6) {
+                    labelEl.textContent = 'YOUR IP ADDRESSES';
+                    var wrap = document.createElement('div');
+                    wrap.className = 'dual-stack';
+                    wrap.appendChild(makeBlock(stV4, 'IPv4', true));
+                    var sep = document.createElement('div');
+                    sep.className = 'dual-sep';
+                    wrap.appendChild(sep);
+                    wrap.appendChild(makeBlock(stV6, 'IPv6', true));
+                    resultEl.appendChild(wrap);
+                } else {
+                    var single = stV4 || stV6;
+                    labelEl.textContent = 'YOUR IP ADDRESS';
+                    resultEl.appendChild(makeBlock(single, stV4 ? 'IPv4' : 'IPv6', false));
+                }
+            }
+
+            ds.v4.then(function (ip) {
+                stV4 = ip; v4done = true;
+                renderState();
+            });
+
+            ds.v6.then(function (ip) {
+                stV6 = ip; v6done = true;
+                if (ip || (!stV4 && !stV6)) renderState();
+            });
+
+            function fbCopy(text) {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); } catch (_) { }
+                document.body.removeChild(ta);
+            }
+        }());
+    </script>
+
+</body>
+
+</html>

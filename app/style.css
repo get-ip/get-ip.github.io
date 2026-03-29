@@ -1,0 +1,586 @@
+/* ══════════════════════════════════════
+   Шрифты
+   ══════════════════════════════════════ */
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron.woff2') format('woff2');
+    font-weight: 400 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Space Mono';
+    src: url('fonts/SpaceMono-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ══════════════════════════════════════
+   Сброс
+   ══════════════════════════════════════ */
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: #000;
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* ══════════════════════════════════════
+   Canvas — звёзды
+   ══════════════════════════════════════ */
+
+canvas#starfield {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* ══════════════════════════════════════
+   Туманности
+   ══════════════════════════════════════ */
+
+.nebula {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.nebula-1 {
+    background: radial-gradient(circle, #7b2ff7, transparent 70%);
+    top: -10%;
+    left: -10%;
+    animation: drift1 20s ease-in-out infinite alternate;
+}
+
+.nebula-2 {
+    background: radial-gradient(circle, #00c6ff, transparent 70%);
+    bottom: -15%;
+    right: -10%;
+    animation: drift2 25s ease-in-out infinite alternate;
+}
+
+.nebula-3 {
+    background: radial-gradient(circle, #f857a6, transparent 70%);
+    top: 40%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    animation: drift3 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 { to { transform: translate(80px, 60px) scale(1.2); } }
+@keyframes drift2 { to { transform: translate(-60px, -80px) scale(1.15); } }
+@keyframes drift3 { to { transform: translate(-100px, 40px) scale(0.9); } }
+
+/* ══════════════════════════════════════
+   Контент
+   ══════════════════════════════════════ */
+
+.content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    padding: 0 3vw;
+}
+
+.label {
+    font-size: clamp(0.55rem, 1.1vw, 0.78rem);
+    text-transform: uppercase;
+    letter-spacing: 0.55em;
+    color: rgba(255, 255, 255, 0.48);
+    margin-bottom: clamp(1.5rem, 4vh, 2.8rem);
+}
+
+/* ══════════════════════════════════════
+   IP-адрес
+   ══════════════════════════════════════ */
+
+.ip-address {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 8.5vw, 11rem);
+    line-height: 1;
+    white-space: nowrap;
+    background: linear-gradient(135deg, #00c6ff 0%, #a855f7 40%, #f857a6 70%, #ffcc70 100%);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease-in-out infinite;
+    filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.3));
+    cursor: pointer;
+    transition: filter 0.35s ease;
+}
+
+.ip-address:hover {
+    filter: drop-shadow(0 0 70px rgba(0, 198, 255, 0.55));
+}
+
+.ip-address.copied {
+    filter: drop-shadow(0 0 80px rgba(74, 222, 128, 0.8));
+}
+
+@keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ══════════════════════════════════════
+   Тип адреса
+   ══════════════════════════════════════ */
+
+.ip-type {
+    margin-top: clamp(0.8rem, 2.5vh, 1.4rem);
+    font-size: clamp(0.5rem, 1vw, 0.75rem);
+    letter-spacing: 0.4em;
+    color: rgba(255, 255, 255, 0.18);
+    text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════
+   Dual-stack
+   ══════════════════════════════════════ */
+
+.dual-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.2rem, 3vh, 2rem);
+}
+
+.ip-block {
+    text-align: center;
+}
+
+.ip-address.ip-dual {
+    font-size: clamp(1.4rem, 6vw, 7rem);
+}
+
+.dual-sep {
+    width: clamp(60px, 15vw, 120px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.35), transparent);
+}
+
+/* ══════════════════════════════════════
+   Спиннер
+   ══════════════════════════════════════ */
+
+.spinner {
+    width: 44px;
+    height: 44px;
+    border: 2px solid rgba(168, 85, 247, 0.1);
+    border-top-color: #a855f7;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════
+   Ошибка
+   ══════════════════════════════════════ */
+
+.error {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 6vw, 6rem);
+    color: rgba(248, 113, 113, 0.5);
+}
+
+/* ══════════════════════════════════════
+   Адаптив
+   ══════════════════════════════════════ */
+
+@media (max-width: 480px) {
+    .ip-address { font-size: clamp(1.6rem, 9.5vw, 4rem); }
+}
+
+/* ══════════════════════════════════════
+   Canvas-звёзды
+   ══════════════════════════════════════ */
+
+canvas#starfield {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* ══════════════════════════════════════
+   Туманности
+   ══════════════════════════════════════ */
+
+.nebula {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.nebula-1 {
+    background: radial-gradient(circle, #7b2ff7, transparent 70%);
+    top: -10%;
+    left: -10%;
+    animation: drift1 20s ease-in-out infinite alternate;
+}
+
+.nebula-2 {
+    background: radial-gradient(circle, #00c6ff, transparent 70%);
+    bottom: -15%;
+    right: -10%;
+    animation: drift2 25s ease-in-out infinite alternate;
+}
+
+.nebula-3 {
+    background: radial-gradient(circle, #f857a6, transparent 70%);
+    top: 40%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    animation: drift3 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+    to { transform: translate(80px, 60px) scale(1.2); }
+}
+@keyframes drift2 {
+    to { transform: translate(-60px, -80px) scale(1.15); }
+}
+@keyframes drift3 {
+    to { transform: translate(-100px, 40px) scale(0.9); }
+}
+
+/* ══════════════════════════════════════
+   Контент
+   ══════════════════════════════════════ */
+
+.content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: clamp(3rem, 8vh, 5.5rem) 1.5rem 5rem;
+    width: 100%;
+    max-width: 720px;
+    container-type: inline-size;
+}
+
+.label {
+    font-size: clamp(0.6rem, 1.4vw, 0.78rem);
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    color: rgba(255, 255, 255, 0.22);
+    margin-bottom: 1.5rem;
+}
+
+/* ══════════════════════════════════════
+   IP-адрес
+   ══════════════════════════════════════ */
+
+.ip-address {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 8.5cqw, 5.5rem);
+    line-height: 1.15;
+    background: linear-gradient(135deg, #00c6ff 0%, #a855f7 40%, #f857a6 70%, #ffcc70 100%);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.35));
+    white-space: nowrap;
+    cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+.ip-address:hover {
+    filter: drop-shadow(0 0 48px rgba(0, 198, 255, 0.55));
+}
+
+@keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.ip-type {
+    margin-top: 0.8rem;
+    font-size: clamp(0.6rem, 1.2vw, 0.78rem);
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+}
+
+.copy-hint {
+    margin-top: 0.5rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    color: rgba(255, 255, 255, 0.12);
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.copy-hint.copied {
+    color: rgba(74, 222, 128, 0.7);
+}
+
+/* ══════════════════════════════════════
+   Спиннер загрузки
+   ══════════════════════════════════════ */
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 2px solid rgba(168, 85, 247, 0.12);
+    border-top-color: #a855f7;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    margin-top: 1rem;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.25em;
+}
+
+/* ══════════════════════════════════════
+   Ошибка
+   ══════════════════════════════════════ */
+
+.error {
+    color: #f87171;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* ══════════════════════════════════════
+   Панель источников
+   ══════════════════════════════════════ */
+
+.sources-panel {
+    margin-top: 3.5rem;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 85, 247, 0.14);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+}
+
+.sources-panel.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.sources-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 0.55rem 1rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.16);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+    background: rgba(168, 85, 247, 0.03);
+}
+
+.sources-body {
+    max-height: 36vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 85, 247, 0.22) transparent;
+}
+
+.sources-body::-webkit-scrollbar { width: 3px; }
+.sources-body::-webkit-scrollbar-track { background: transparent; }
+.sources-body::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.22); }
+
+/* ── Строка источника ── */
+
+.src-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.38rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.022);
+    border-left: 2px solid transparent;
+    opacity: 0;
+    animation: rowIn 0.2s ease forwards;
+    transition: background 0.4s ease, border-left-color 0.4s ease;
+}
+
+.src-row:last-child { border-bottom: none; }
+
+@keyframes rowIn { to { opacity: 1; } }
+
+.src-row.fail {
+    opacity: 0.1;
+    transition: background 0.4s ease, border-left-color 0.4s ease, opacity 0.5s ease;
+}
+
+.src-row.winner {
+    opacity: 1;
+    background: linear-gradient(90deg, rgba(0, 198, 255, 0.13) 0%, rgba(168, 85, 247, 0.07) 55%, transparent 100%);
+    border-left-color: #00c6ff;
+    animation: winnerGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes winnerGlow {
+    0%, 100% {
+        border-left-color: #00c6ff;
+        background: linear-gradient(90deg, rgba(0,198,255,0.13) 0%, rgba(168,85,247,0.07) 55%, transparent 100%);
+    }
+    50% {
+        border-left-color: #a855f7;
+        background: linear-gradient(90deg, rgba(168,85,247,0.13) 0%, rgba(0,198,255,0.07) 55%, transparent 100%);
+    }
+}
+
+.src-name {
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.35);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
+}
+
+.src-row.fail   .src-name { color: rgba(255, 255, 255, 0.13); }
+.src-row.winner .src-name { color: rgba(255, 255, 255, 0.92); }
+
+/* ── Статус ── */
+
+.src-status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dot.scanning {
+    background: rgba(168, 85, 247, 0.4);
+    animation: dotPulse 1.3s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.25; transform: scale(0.8); }
+    50%       { opacity: 1;    transform: scale(1.35); }
+}
+
+.dot.ok   { background: rgba(74, 222, 128, 0.65); }
+.dot.fail { background: rgba(255, 255, 255, 0.07); }
+
+.dot.winner {
+    width: 7px;
+    height: 7px;
+    background: #00c6ff;
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.9);
+    animation: dotWinner 1.8s ease-in-out infinite;
+}
+
+@keyframes dotWinner {
+    0%, 100% { background: #00c6ff; box-shadow: 0 0 10px rgba(0, 198, 255, 0.9); }
+    50%       { background: #a855f7; box-shadow: 0 0 16px rgba(168, 85, 247, 1); }
+}
+
+.stxt {
+    font-size: 0.59rem;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.18);
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.src-row.ok   .stxt { color: rgba(74, 222, 128, 0.5); }
+.src-row.fail .stxt { display: none; }
+
+.src-row.winner .stxt {
+    background: linear-gradient(90deg, #00c6ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.14em;
+    font-size: 0.62rem;
+}
+
+/* ══════════════════════════════════════
+   Статистика панели
+   ══════════════════════════════════════ */
+
+.sources-footer {
+    padding: 0.48rem 1rem;
+    font-size: 0.54rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.13);
+    border-top: 1px solid rgba(168, 85, 247, 0.07);
+    text-align: center;
+    transition: color 0.4s ease;
+}
+
+/* ══════════════════════════════════════
+   Адаптив
+   ══════════════════════════════════════ */
+
+@media (max-width: 480px) {
+    .content       { padding: 2.5rem 1rem 3rem; }
+    .sources-panel { margin-top: 2.5rem; }
+    .src-name      { font-size: 0.6rem; }
+    .stxt          { font-size: 0.54rem; }
+}
